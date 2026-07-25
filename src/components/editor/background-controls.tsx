@@ -79,6 +79,11 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
       imageFit: bg.imageFit || "cover",
       overlayOpacity: bg.overlayOpacity ?? 0,
       hideBlobs: bg.hideBlobs ?? false,
+      blobColor: bg.blobColor,
+      blobColor2: bg.blobColor2,
+      blobScale: bg.blobScale,
+      blobOpacity: bg.blobOpacity,
+      blobBlur: bg.blobBlur,
       ...patch,
     };
     onChange({ background: next });
@@ -100,6 +105,11 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
       imageFit: bg.imageFit || "cover",
       overlayOpacity: bg.overlayOpacity ?? 0,
       hideBlobs: bg.hideBlobs ?? false,
+      blobColor: bg.blobColor,
+      blobColor2: bg.blobColor2,
+      blobScale: bg.blobScale,
+      blobOpacity: bg.blobOpacity,
+      blobBlur: bg.blobBlur,
     };
     onChange({ background: next });
   }
@@ -149,10 +159,10 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
             size="sm"
             className="h-6 text-[10px] text-muted-foreground hover:text-foreground"
             onClick={() => onApplyToAll(slide.background, slide.inverted)}
-            title="Tüm ekranlara bu arka planı uygula"
+            title="Apply this background to all slides"
           >
             <Layers className="mr-1 h-3 w-3" />
-            Tümüne Uygula
+            Apply to All
           </Button>
         )}
       </div>
@@ -161,10 +171,10 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
       <div className="grid grid-cols-4 gap-1 rounded-md bg-muted p-1 text-center">
         {(
           [
-            { id: "theme", label: "Tema" },
+            { id: "theme", label: "Theme" },
             { id: "gradient", label: "Gradient" },
-            { id: "solid", label: "Düz Renk" },
-            { id: "image", label: "Görsel" },
+            { id: "solid", label: "Solid" },
+            { id: "image", label: "Image" },
           ] as const
         ).map((item) => (
           <button
@@ -187,7 +197,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
           {/* Preset Gradients */}
           <div className="space-y-1">
             <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              Hazır Şablonlar
+              Presets
             </span>
             <div className="grid grid-cols-4 gap-1.5">
               {PRESET_GRADIENTS.map((p) => (
@@ -217,7 +227,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
           {/* Custom Gradient Color Inputs */}
           <div className="grid grid-cols-2 gap-2">
             <div className="space-y-1">
-              <Label className="text-[11px] text-muted-foreground">Başlangıç Rengi</Label>
+              <Label className="text-[11px] text-muted-foreground">Start Color</Label>
               <div className="flex items-center gap-1.5">
                 <input
                   type="color"
@@ -234,7 +244,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
               </div>
             </div>
             <div className="space-y-1">
-              <Label className="text-[11px] text-muted-foreground">Bitiş Rengi</Label>
+              <Label className="text-[11px] text-muted-foreground">End Color</Label>
               <div className="flex items-center gap-1.5">
                 <input
                   type="color"
@@ -255,7 +265,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
           {/* Gradient Type & Angle */}
           <div className="grid grid-cols-2 gap-2">
             <div className="space-y-1">
-              <Label className="text-[11px] text-muted-foreground">Geçiş Tipi</Label>
+              <Label className="text-[11px] text-muted-foreground">Gradient Type</Label>
               <Select
                 value={bg.gradientType || "linear"}
                 onValueChange={(val) =>
@@ -266,8 +276,8 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="linear">Doğrusal (Linear)</SelectItem>
-                  <SelectItem value="radial">Radyal (Radial)</SelectItem>
+                  <SelectItem value="linear">Linear</SelectItem>
+                  <SelectItem value="radial">Radial</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -275,7 +285,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
             {bg.gradientType !== "radial" && (
               <div className="space-y-1">
                 <div className="flex justify-between">
-                  <Label className="text-[11px] text-muted-foreground">Açı</Label>
+                  <Label className="text-[11px] text-muted-foreground">Angle</Label>
                   <span className="text-[10px] text-muted-foreground">{bg.angle ?? 160}°</span>
                 </div>
                 <input
@@ -296,7 +306,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
       {/* SOLID COLOR CONTROLS */}
       {currentType === "solid" && (
         <div className="space-y-2 pt-1">
-          <Label className="text-[11px] text-muted-foreground">Arka Plan Rengi</Label>
+          <Label className="text-[11px] text-muted-foreground">Background Color</Label>
           <div className="flex items-center gap-2">
             <input
               type="color"
@@ -349,14 +359,14 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
             </div>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <span className="truncate text-xs font-medium">Arka Plan Görseli</span>
+              <span className="truncate text-xs font-medium">Background Image</span>
               <span className="truncate text-[10px] text-muted-foreground">
                 {uploading
-                  ? "Yükleniyor…"
+                  ? "Uploading…"
                   : !hasImage
-                    ? "Görsel sürükleyin veya seçin"
+                    ? "Drag or select image"
                     : isData
-                      ? "Yüklendi (Oturumda geçerli)"
+                      ? "Uploaded (Session only)"
                       : bg.imageUrl?.replace(/^.*\/(?=[^/]+\/[^/]+$)/, "…/")}
               </span>
             </div>
@@ -381,7 +391,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="h-3.5 w-3.5" />
-              Yükle
+              Upload
             </Button>
 
             {hasImage && (
@@ -391,7 +401,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
                 size="icon"
                 className="h-8 w-8"
                 onClick={() => updateBg({ imageUrl: "" })}
-                title="Temizle"
+                title="Clear"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -400,13 +410,13 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
 
           {error && <p className="text-[11px] text-destructive">{error}</p>}
           {knownMissing && (
-            <p className="text-[11px] text-destructive">Görsel bulunamadı: {bg.imageUrl}</p>
+            <p className="text-[11px] text-destructive">Image not found: {bg.imageUrl}</p>
           )}
 
           {hasImage && (
             <div className="grid grid-cols-2 gap-2">
               <div className="space-y-1">
-                <Label className="text-[11px] text-muted-foreground">Görsel Düzeni</Label>
+                <Label className="text-[11px] text-muted-foreground">Image Fit</Label>
                 <Select
                   value={bg.imageFit || "cover"}
                   onValueChange={(val) =>
@@ -417,16 +427,16 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="cover">Kapla (Cover)</SelectItem>
-                    <SelectItem value="contain">Sığdır (Contain)</SelectItem>
-                    <SelectItem value="fill">Esnep Doldur (Fill)</SelectItem>
+                    <SelectItem value="cover">Cover</SelectItem>
+                    <SelectItem value="contain">Contain</SelectItem>
+                    <SelectItem value="fill">Fill</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-1">
                 <div className="flex justify-between">
-                  <Label className="text-[11px] text-muted-foreground">Koyu Katman</Label>
+                  <Label className="text-[11px] text-muted-foreground">Overlay Opacity</Label>
                   <span className="text-[10px] text-muted-foreground">
                     {Math.round((bg.overlayOpacity ?? 0) * 100)}%
                   </span>
@@ -455,7 +465,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
             onChange={(e) => onChange({ inverted: e.target.checked })}
             className="rounded border-input text-primary accent-primary"
           />
-          <span>Koyu Metin Modu / Inverted</span>
+          <span>Dark Text Mode (Inverted)</span>
         </label>
 
         <div className="space-y-2">
@@ -466,7 +476,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
               onChange={(e) => updateBg({ hideBlobs: !e.target.checked })}
               className="rounded border-input text-primary accent-primary"
             />
-            <span>Ortam Baloncuklarını Göster (Blobs)</span>
+            <span>Show Ambient Blobs</span>
           </label>
 
           {!bg.hideBlobs && (
@@ -474,7 +484,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
               {/* BLOB COLORS */}
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <Label className="text-[11px] text-muted-foreground">Baloncuk Renkleri</Label>
+                  <Label className="text-[11px] text-muted-foreground">Blob Colors</Label>
                   {(bg.blobColor || bg.blobColor2) && (
                     <Button
                       type="button"
@@ -483,7 +493,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
                       className="h-5 px-1 text-[10px] text-muted-foreground hover:text-foreground"
                       onClick={() => updateBg({ blobColor: undefined, blobColor2: undefined })}
                     >
-                      Sıfırla
+                      Reset
                     </Button>
                   )}
                 </div>
@@ -498,7 +508,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
                     <Input
                       type="text"
                       value={bg.blobColor || ""}
-                      placeholder="Renk 1"
+                      placeholder="Color 1"
                       onChange={(e) => updateBg({ blobColor: e.target.value })}
                       className="h-6 font-mono text-[11px] uppercase"
                     />
@@ -513,7 +523,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
                     <Input
                       type="text"
                       value={bg.blobColor2 || ""}
-                      placeholder="Renk 2"
+                      placeholder="Color 2"
                       onChange={(e) => updateBg({ blobColor2: e.target.value })}
                       className="h-6 font-mono text-[11px] uppercase"
                     />
@@ -522,14 +532,14 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
 
                 {/* Quick Color Presets */}
                 <div className="flex items-center gap-1 pt-1">
-                  <span className="text-[9px] text-muted-foreground">Hazır:</span>
+                  <span className="text-[9px] text-muted-foreground">Presets:</span>
                   {[
-                    { c1: "#ffffff", c2: "#ffffff", title: "Beyaz Glow" },
-                    { c1: "#00f2fe", c2: "#4facfe", title: "Neon Mavi" },
-                    { c1: "#ff0844", c2: "#ffb199", title: "Neon Pembe" },
-                    { c1: "#f6d365", c2: "#fda085", title: "Altın Işıltı" },
-                    { c1: "#11998e", c2: "#38ef7d", title: "Zümrüt" },
-                    { c1: "#8e2de2", c2: "#4a00e0", title: "Koyu Mor" },
+                    { c1: "#ffffff", c2: "#ffffff", title: "White Glow" },
+                    { c1: "#00f2fe", c2: "#4facfe", title: "Neon Blue" },
+                    { c1: "#ff0844", c2: "#ffb199", title: "Neon Pink" },
+                    { c1: "#f6d365", c2: "#fda085", title: "Golden Glow" },
+                    { c1: "#11998e", c2: "#38ef7d", title: "Emerald" },
+                    { c1: "#8e2de2", c2: "#4a00e0", title: "Deep Purple" },
                   ].map((preset) => (
                     <button
                       key={preset.title}
@@ -546,7 +556,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
               {/* BLOB SIZE / SCALE */}
               <div className="space-y-1">
                 <div className="flex justify-between items-center">
-                  <Label className="text-[11px] text-muted-foreground">Baloncuk Boyutu</Label>
+                  <Label className="text-[11px] text-muted-foreground">Blob Scale</Label>
                   <span className="text-[10px] font-mono text-muted-foreground">
                     {Math.round((bg.blobScale ?? 1.0) * 100)}%
                   </span>
@@ -576,7 +586,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
               {/* BLOB OPACITY */}
               <div className="space-y-1">
                 <div className="flex justify-between items-center">
-                  <Label className="text-[11px] text-muted-foreground">Saydamlık (Opacity)</Label>
+                  <Label className="text-[11px] text-muted-foreground">Opacity</Label>
                   <span className="text-[10px] font-mono text-muted-foreground">
                     {Math.round((bg.blobOpacity ?? 0.3) * 100)}%
                   </span>
@@ -595,7 +605,7 @@ export function BackgroundControls({ slide, onChange, onApplyToAll }: Props) {
               {/* BLOB BLUR */}
               <div className="space-y-1">
                 <div className="flex justify-between items-center">
-                  <Label className="text-[11px] text-muted-foreground">Bulanıklık (Blur)</Label>
+                  <Label className="text-[11px] text-muted-foreground">Blur</Label>
                   <span className="text-[10px] font-mono text-muted-foreground">
                     {bg.blobBlur ?? 60}px
                   </span>

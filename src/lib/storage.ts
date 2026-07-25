@@ -76,7 +76,7 @@ function migrateSlide(slide: Slide): Slide {
   };
 }
 
-function mergeWithDefaults(parsed: Partial<ProjectState>): ProjectState {
+export function mergeWithDefaults(parsed: Partial<ProjectState>): ProjectState {
   const connectedCanvas =
     typeof parsed.connectedCanvas === "boolean"
       ? parsed.connectedCanvas

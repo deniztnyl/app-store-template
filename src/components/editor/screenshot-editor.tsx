@@ -4,6 +4,7 @@ import JSZip from "jszip";
 import { toPng } from "html-to-image";
 import { Toaster, toast } from "sonner";
 import {
+  DEVICE_LABEL,
   getExportSizes,
   hasTheme,
   supportsLandscape,
@@ -13,7 +14,7 @@ import { detectPlatform, nid } from "@/lib/defaults";
 import { isBuiltInElementId, isTextElementId, textElementKey } from "@/lib/elements";
 import { preloadImages } from "@/lib/image-cache";
 import { resolveScreenshot, writeLocalized } from "@/lib/locale";
-import { useProject } from "@/lib/storage";
+import { mergeWithDefaults, useProject } from "@/lib/storage";
 import type {
   BuiltInElementId,
   Device,
@@ -34,7 +35,7 @@ export function ScreenshotEditor() {
   const [activeSlideId, setActiveSlideId] = React.useState<string | null>(null);
   const [selectedElement, setSelectedElement] = React.useState<SelectedElement | null>(null);
   const [exporting, setExporting] = React.useState<string | null>(null);
-  const [ready, setReady] = React.useState(false);
+  const [exportDeviceOverride, setExportDeviceOverride] = React.useState<Device | null>(null);
   const [exportLocaleOverride, setExportLocaleOverride] = React.useState<string | null>(null);
   const [exportSlideIndex, setExportSlideIndex] = React.useState(0);
   const exportRef = React.useRef<HTMLDivElement | null>(null);
@@ -43,6 +44,10 @@ export function ScreenshotEditor() {
   const activeSlide =
     currentSlides.find((s) => s.id === activeSlideId) || currentSlides[0] || null;
   const theme = themeById(state.themeId);
+
+  const activeExportDevice = exportDeviceOverride ?? state.device;
+  const activeExportSlides = state.slidesByDevice[activeExportDevice] || [];
+  const { cW: exportCW, cH: exportCH } = getCanvas(activeExportDevice, state.orientation);
 
   React.useEffect(() => {
     if (selectedElement && selectedElement.slideId !== activeSlide?.id) {
@@ -94,7 +99,7 @@ export function ScreenshotEditor() {
 
   React.useEffect(() => {
     if (!hydrated) return;
-    preloadImages(assetPaths).finally(() => setReady(true));
+    void preloadImages(assetPaths);
     // assetPaths is derived from assetSig; depending on the string keeps the
     // effect from re-firing when slidesByDevice churns without path changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -274,6 +279,52 @@ export function ScreenshotEditor() {
     [setState],
   );
 
+  const handleSaveProject = React.useCallback(() => {
+    try {
+      const jsonStr = JSON.stringify(state, null, 2);
+      const blob = new Blob([jsonStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const fileName = `${(state.appName || "project").toLowerCase().replace(/[^a-z0-9_-]+/gi, "-")}-project.json`;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success(`Project file saved: ${fileName}`);
+    } catch {
+      toast.error("Failed to save project file");
+    }
+  }, [state]);
+
+  const handleOpenProject = React.useCallback(
+    (file: File) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const content = e.target?.result as string;
+          const parsed = JSON.parse(content);
+          if (!parsed || typeof parsed !== "object" || !parsed.slidesByDevice) {
+            toast.error("Invalid project file structure (.json expected)");
+            return;
+          }
+          const merged = mergeWithDefaults(parsed);
+          setState(merged);
+          setActiveSlideId(null);
+          toast.success("Project loaded successfully!");
+        } catch {
+          toast.error("Could not parse JSON project file");
+        }
+      };
+      reader.onerror = () => {
+        toast.error("Failed to read project file");
+      };
+      reader.readAsText(file);
+    },
+    [setState],
+  );
+
   const duplicateSlide = React.useCallback(
     (id: string) => {
       let newId: string | null = null;
@@ -381,49 +432,41 @@ export function ScreenshotEditor() {
     });
 
   async function exportAll() {
-    if (!currentSlides.length) {
+    const ALL_DEVICES: Device[] = [
+      "iphone",
+      "ipad",
+      "android",
+      "android-7",
+      "android-10",
+      "feature-graphic",
+    ];
+
+    const configuredDevices = ALL_DEVICES.filter(
+      (dev) => (state.slidesByDevice[dev] || []).length > 0
+    );
+
+    if (!configuredDevices.length) {
       toast.error("No screens to export");
       return;
     }
 
-    const sizes = getExportSizes(state.device, state.orientation);
-    if (!sizes.length) {
-      toast.error("Nothing to export");
-      return;
-    }
     const locales = state.locales;
     await preloadImages(assetPaths, { retryFailed: true });
     await waitForPaint();
 
-    const missingScreens = currentSlides
-      .map((slide, index) => ({ slide, index }))
-      .filter(({ slide }) => slideNeedsScreenshot(state.device, slide) && !slide.screenshot);
-    const reusedBackScreens = currentSlides
-      .map((slide, index) => ({ slide, index }))
-      .filter(
-        ({ slide }) =>
-          state.device !== "feature-graphic" &&
-          slide.layout === "two-devices" &&
-          slide.screenshot &&
-          !slide.screenshotSecondary,
-      );
-    if (missingScreens.length > 0 || reusedBackScreens.length > 0) {
-      const details = [
-        missingScreens.length
-          ? `${missingScreens.length} screen${missingScreens.length === 1 ? "" : "s"} will export with an empty device.`
-          : null,
-        reusedBackScreens.length
-          ? `${reusedBackScreens.length} two-device screen${reusedBackScreens.length === 1 ? "" : "s"} will reuse the primary screenshot in back.`
-          : null,
-      ].filter(Boolean);
-      toast.warning("Export includes placeholder screenshots", {
-        description: details.join(" "),
-        duration: 7000,
-      });
+    let totalUnits = 0;
+    for (const dev of configuredDevices) {
+      const slides = state.slidesByDevice[dev] || [];
+      const sizes = getExportSizes(dev, state.orientation);
+      totalUnits += sizes.length * locales.length * slides.length;
     }
 
-    // Make sure custom fonts are loaded before snapshot so typography in PNG
-    // matches what's on screen.
+    if (totalUnits === 0) {
+      toast.error("Nothing to export");
+      return;
+    }
+
+    // Make sure custom fonts are loaded before snapshot
     if (typeof document !== "undefined" && document.fonts && document.fonts.ready) {
       try {
         await document.fonts.ready;
@@ -432,56 +475,77 @@ export function ScreenshotEditor() {
       }
     }
 
-    const { cW, cH } = getCanvas(state.device, state.orientation);
-    const platform = detectPlatform(state.device);
     const zip = new JSZip();
-    const totalUnits = sizes.length * locales.length * currentSlides.length;
-    let unit = 0;
+    let currentUnit = 0;
     let okCount = 0;
     let failed = 0;
     const errors: string[] = [];
 
-    for (const locale of locales) {
-      setExportLocaleOverride(locale);
+    for (const dev of configuredDevices) {
+      const slides = state.slidesByDevice[dev] || [];
+      const sizes = getExportSizes(dev, state.orientation);
+      const platform = detectPlatform(dev);
+      const deviceFolder = DEVICE_LABEL[dev] || dev;
+
+      setExportDeviceOverride(dev);
       await waitForPaint();
 
-      for (const size of sizes) {
-        for (let i = 0; i < currentSlides.length; i++) {
-          const slide = currentSlides[i];
-          unit += 1;
-          setExporting(`${unit}/${totalUnits}`);
-          setExportSlideIndex(i);
-          await waitForPaint();
-          const el = exportRef.current;
-          if (!el) {
-            failed += 1;
-            errors.push(`${locale} ${size.w}×${size.h} screen ${i + 1}: render target missing`);
-            continue;
-          }
-          try {
-            const dataUrl = await captureSlide(el, cW, cH, size.w, size.h);
-            const base64 = dataUrl.split(",")[1] || "";
-            const filename = `${String(i + 1).padStart(2, "0")}-${slide.layout}.png`;
+      for (const locale of locales) {
+        setExportLocaleOverride(locale);
+        await waitForPaint();
 
-            // Structured store-ready folder hierarchy
-            const path = `${platform}/${state.device}/${size.w}x${size.h}/${locale}/${filename}`;
-            zip.file(path, base64, { base64: true });
+        for (const size of sizes) {
+          for (let i = 0; i < slides.length; i++) {
+            const slide = slides[i];
+            currentUnit += 1;
+            setExporting(`${currentUnit}/${totalUnits}`);
+            setExportSlideIndex(i);
+            await waitForPaint();
 
-            // Direct root folder for quick access
-            const rootPath = `Screenshots_${state.device}/${filename}`;
-            zip.file(rootPath, base64, { base64: true });
+            const el = exportRef.current;
+            if (!el) {
+              failed += 1;
+              errors.push(`${dev} ${locale} ${size.w}×${size.h} screen ${i + 1}: render target missing`);
+              continue;
+            }
 
-            okCount += 1;
-          } catch (e) {
-            failed += 1;
-            const msg = e instanceof Error ? e.message : String(e);
-            errors.push(`${locale} ${size.w}×${size.h} screen ${i + 1}: ${msg}`);
-            console.error("Export failed", { slideId: slide.id, locale, size }, e);
+            try {
+              const { cW: eCW, cH: eCH } = getCanvas(dev, state.orientation);
+              const dataUrl = await captureSlide(el, eCW, eCH, size.w, size.h);
+              const base64 = dataUrl.split(",")[1] || "";
+              const filename = `${String(i + 1).padStart(2, "0")}-${slide.layout}.png`;
+
+              // Folder structure inside ZIP: Device folder (e.g. iPhone, iPad, Android Phone)
+              let pathInZip: string;
+              if (locales.length > 1 && sizes.length > 1) {
+                pathInZip = `${deviceFolder}/${locale}/${size.w}x${size.h}/${filename}`;
+              } else if (locales.length > 1) {
+                pathInZip = `${deviceFolder}/${locale}/${filename}`;
+              } else if (sizes.length > 1) {
+                pathInZip = `${deviceFolder}/${size.w}x${size.h}/${filename}`;
+              } else {
+                pathInZip = `${deviceFolder}/${filename}`;
+              }
+
+              zip.file(pathInZip, base64, { base64: true });
+
+              // Store-ready structure
+              const storePath = `AppStore_Structure/${platform}/${dev}/${size.w}x${size.h}/${locale}/${filename}`;
+              zip.file(storePath, base64, { base64: true });
+
+              okCount += 1;
+            } catch (e) {
+              failed += 1;
+              const msg = e instanceof Error ? e.message : String(e);
+              errors.push(`${dev} ${locale} ${size.w}×${size.h} screen ${i + 1}: ${msg}`);
+              console.error("Export failed", { dev, slideId: slide.id, locale, size }, e);
+            }
           }
         }
       }
     }
 
+    setExportDeviceOverride(null);
     setExportLocaleOverride(null);
     setExporting(null);
 
@@ -491,19 +555,18 @@ export function ScreenshotEditor() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${slugify(state.appName)}-${state.device}-screenshots.zip`;
+        a.download = `${slugify(state.appName)}-all-devices-bundle.zip`;
         a.click();
         setTimeout(() => URL.revokeObjectURL(url), 5000);
       } catch (e) {
-        toast.error("Couldn't bundle export");
+        toast.error("Couldn't generate export ZIP bundle");
         console.error(e);
         return;
       }
     }
 
-    const summary = `${locales.length} locale${locales.length === 1 ? "" : "s"} × ${sizes.length} size${sizes.length === 1 ? "" : "s"}`;
     if (failed === 0) {
-      toast.success(`Exported ${okCount} PNGs (${summary})`);
+      toast.success(`Exported ${okCount} PNGs across ${configuredDevices.length} device decks!`);
     } else if (okCount === 0) {
       toast.error(`All ${failed} renders failed`, {
         description: errors.slice(0, 3).join("\n"),
@@ -562,7 +625,7 @@ export function ScreenshotEditor() {
 
   // ---------- Render ----------
 
-  if (!hydrated || !ready) {
+  if (!hydrated) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-2 text-muted-foreground">
@@ -592,6 +655,8 @@ export function ScreenshotEditor() {
         orientation={state.orientation}
         setOrientation={(v) => setState((p) => ({ ...p, orientation: v }))}
         onExport={exportAll}
+        onSaveProject={handleSaveProject}
+        onOpenProject={handleOpenProject}
         onResetAll={() => {
           reset();
           setActiveSlideId(null);
@@ -696,12 +761,12 @@ export function ScreenshotEditor() {
           pointerEvents: "none",
         }}
       >
-        {currentSlides.length > 0 && (
+        {activeExportSlides.length > 0 && (
           <div
             ref={exportRef}
             style={{
-              width: cW,
-              height: cH,
+              width: exportCW,
+              height: exportCH,
               overflow: "hidden",
               position: "absolute",
               left: -99999,
@@ -711,15 +776,15 @@ export function ScreenshotEditor() {
             <div
               style={{
                 position: "absolute",
-                left: -exportSlideIndex * cW,
+                left: -exportSlideIndex * exportCW,
                 top: 0,
-                width: cW * currentSlides.length,
-                height: cH,
+                width: exportCW * activeExportSlides.length,
+                height: exportCH,
               }}
             >
               <DeckCanvas
-                slides={currentSlides}
-                device={state.device}
+                slides={activeExportSlides}
+                device={activeExportDevice}
                 orientation={state.orientation}
                 theme={theme}
                 locale={exportLocaleOverride ?? state.locale}

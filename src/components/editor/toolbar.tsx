@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { AlertTriangle, Check, Cloud, Download, UnfoldHorizontal, RotateCcw } from "lucide-react";
+import { AlertTriangle, Check, Cloud, Download, FolderOpen, Save, UnfoldHorizontal, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -38,6 +38,8 @@ type Props = {
   orientation: Orientation;
   setOrientation: (v: Orientation) => void;
   onExport: () => void;
+  onSaveProject: () => void;
+  onOpenProject: (file: File) => void;
   onResetAll: () => void;
   onResetDevice: () => void;
   exporting: string | null;
@@ -50,6 +52,7 @@ export function Toolbar(props: Props) {
   const platform = detectPlatform(props.device);
   const hasLandscape = supportsLandscape(props.device);
   const [resetOpen, setResetOpen] = React.useState(false);
+  const openFileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Track last device per platform so iOS/Android tabs preserve user's choice.
   const lastByPlatform = React.useRef<{ ios: Device; android: Device }>({
@@ -175,6 +178,45 @@ export function Toolbar(props: Props) {
       <div className="ml-auto flex shrink-0 items-center gap-2">
         <SaveStatus savedAt={props.savedAt} saveError={props.saveError} />
         <span aria-hidden className="h-5 w-px bg-border" />
+
+        <input
+          type="file"
+          accept=".json,application/json"
+          ref={openFileInputRef}
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              props.onOpenProject(file);
+              e.target.value = "";
+            }
+          }}
+        />
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 gap-1.5 px-2.5 text-xs"
+          onClick={() => openFileInputRef.current?.click()}
+          title="Open project file (.json)"
+          disabled={props.busy}
+        >
+          <FolderOpen className="h-3.5 w-3.5 text-primary" />
+          Open Project
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 gap-1.5 px-2.5 text-xs"
+          onClick={props.onSaveProject}
+          title="Save project file (.json)"
+          disabled={props.busy}
+        >
+          <Save className="h-3.5 w-3.5 text-primary" />
+          Save Project
+        </Button>
+
         <Button
           variant="ghost"
           size="icon"

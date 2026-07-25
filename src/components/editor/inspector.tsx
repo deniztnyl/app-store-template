@@ -155,8 +155,8 @@ export function Inspector({
               placeholder={labelPlaceholder}
             />
             <TextStyleControls
-              title="Label Font, Punto & Renk"
-              defaultColorLabel="Tema Accent"
+              title="Label Typography & Style"
+              defaultColorLabel="Theme Accent"
               styleConfig={slide.labelStyle}
               onChange={(next) => onChange({ labelStyle: next })}
             />
@@ -175,8 +175,8 @@ export function Inspector({
             placeholder={headlinePlaceholder}
           />
           <TextStyleControls
-            title="Headline Font, Punto & Renk"
-            defaultColorLabel="Tema Önplan"
+            title="Headline Typography & Style"
+            defaultColorLabel="Theme Foreground"
             styleConfig={slide.headlineStyle}
             onChange={(next) => onChange({ headlineStyle: next })}
           />

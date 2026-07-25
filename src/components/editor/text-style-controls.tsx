@@ -22,15 +22,15 @@ type Props = {
 };
 
 export const FONT_OPTIONS = [
-  { value: "default", label: "Varsayılan (Default)" },
+  { value: "default", label: "Default" },
   { value: "'Inter', sans-serif", label: "Inter (Modern Sans)" },
   { value: "'Outfit', sans-serif", label: "Outfit (Geometric)" },
   { value: "'Montserrat', sans-serif", label: "Montserrat (Editorial)" },
   { value: "'Poppins', sans-serif", label: "Poppins (Rounded)" },
   { value: "'Roboto', sans-serif", label: "Roboto (Clean)" },
-  { value: "'Playfair Display', serif", label: "Playfair (Lüks Serif)" },
-  { value: "'Cinzel', serif", label: "Cinzel (Klasik Serif)" },
-  { value: "'Space Mono', monospace", label: "Space Mono (Teknik)" },
+  { value: "'Playfair Display', serif", label: "Playfair (Luxury Serif)" },
+  { value: "'Cinzel', serif", label: "Cinzel (Classic Serif)" },
+  { value: "'Space Mono', monospace", label: "Space Mono (Technical)" },
   { value: "'Impact', sans-serif", label: "Impact (Bold Display)" },
 ];
 
@@ -45,7 +45,7 @@ export const WEIGHT_OPTIONS = [
 
 export function TextStyleControls({
   title,
-  defaultColorLabel = "Varsayılan Tema Rengi",
+  defaultColorLabel = "Default Theme Color",
   styleConfig,
   onChange,
 }: Props) {
@@ -95,7 +95,7 @@ export function TextStyleControls({
           <span>{title}</span>
           {hasCustom && (
             <span className="rounded-full bg-primary/10 px-1.5 py-0.2 text-[9px] font-semibold text-primary">
-              Özel
+              Custom
             </span>
           )}
         </button>
@@ -108,7 +108,7 @@ export function TextStyleControls({
               size="icon"
               className="h-6 w-6 text-muted-foreground hover:text-destructive"
               onClick={() => onChange(undefined)}
-              title="Varsayılana Sıfırla"
+              title="Reset to Default"
             >
               <RotateCcw className="h-3 w-3" />
             </Button>
@@ -129,13 +129,13 @@ export function TextStyleControls({
         <div className="mt-2.5 space-y-2.5 pt-2 border-t">
           {/* FONT FAMILY */}
           <div className="space-y-1">
-            <Label className="text-[11px] text-muted-foreground">Yazı Tipi (Font)</Label>
+            <Label className="text-[11px] text-muted-foreground">Font Family</Label>
             <Select
               value={cfg.fontFamily || "default"}
               onValueChange={(val) => updateStyle({ fontFamily: val === "default" ? undefined : val })}
             >
               <SelectTrigger className="h-7 text-xs">
-                <SelectValue placeholder="Varsayılan Tema Fontu" />
+                <SelectValue placeholder="Default Theme Font" />
               </SelectTrigger>
               <SelectContent>
                 {FONT_OPTIONS.map((f) => (
@@ -150,7 +150,7 @@ export function TextStyleControls({
           {/* PUNTO / SIZE SCALE */}
           <div className="space-y-1">
             <div className="flex justify-between items-center">
-              <Label className="text-[11px] text-muted-foreground">Punto / Boyut</Label>
+              <Label className="text-[11px] text-muted-foreground">Font Size</Label>
               <span className="text-[10px] font-mono font-medium text-foreground">
                 {currentScalePercent}%
               </span>
@@ -171,7 +171,7 @@ export function TextStyleControls({
                 size="sm"
                 className="h-6 px-1.5 text-[10px]"
                 onClick={() => updateStyle({ fontSizeScale: 1.0 })}
-                title="Puntoyu %100 Yap"
+                title="Reset Size to 100%"
               >
                 100%
               </Button>
@@ -180,7 +180,7 @@ export function TextStyleControls({
 
           {/* FONT WEIGHT */}
           <div className="space-y-1">
-            <Label className="text-[11px] text-muted-foreground">Kalınlık (Weight)</Label>
+            <Label className="text-[11px] text-muted-foreground">Font Weight</Label>
             <Select
               value={cfg.fontWeight ? String(cfg.fontWeight) : "default"}
               onValueChange={(val) =>
@@ -188,10 +188,10 @@ export function TextStyleControls({
               }
             >
               <SelectTrigger className="h-7 text-xs">
-                <SelectValue placeholder="Varsayılan Kalınlık" />
+                <SelectValue placeholder="Default Weight" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="default">Varsayılan Kalınlık</SelectItem>
+                <SelectItem value="default">Default Weight</SelectItem>
                 {WEIGHT_OPTIONS.map((w) => (
                   <SelectItem key={w.value} value={String(w.value)}>
                     {w.label}
@@ -204,7 +204,7 @@ export function TextStyleControls({
           {/* TEXT COLOR */}
           <div className="space-y-1">
             <div className="flex justify-between items-center">
-              <Label className="text-[11px] text-muted-foreground">Yazı Rengi</Label>
+              <Label className="text-[11px] text-muted-foreground">Text Color</Label>
               {!cfg.color && (
                 <span className="text-[10px] text-muted-foreground italic">{defaultColorLabel}</span>
               )}
@@ -230,9 +230,9 @@ export function TextStyleControls({
                   size="sm"
                   className="h-7 px-1.5 text-[10px]"
                   onClick={() => updateStyle({ color: undefined })}
-                  title="Temizle"
+                  title="Reset"
                 >
-                  Sıfırla
+                  Reset
                 </Button>
               )}
             </div>
