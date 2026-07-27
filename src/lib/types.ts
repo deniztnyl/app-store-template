@@ -1,4 +1,5 @@
 export type Device =
+  | "default"
   | "iphone"
   | "ipad"
   | "android"
@@ -96,6 +97,8 @@ export type Slide = {
   // Per-element overrides; when present, replaces layout default placement.
   transforms?: Partial<Record<BuiltInElementId, ElementTransform>>;
   textElements?: TextElement[];
+  // Track which fields have device-specific overrides (for sync from default device)
+  overrides?: Record<string, boolean>;
 };
 
 export type ThemeId =

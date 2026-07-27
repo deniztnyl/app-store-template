@@ -117,27 +117,133 @@ export function ScreenshotEditor() {
 
   // ---------- Mutations ----------
 
-  const patchSlide = React.useCallback(
-    (id: string, patch: Partial<Slide>) => {
-      setState((prev) => ({
-        ...prev,
-        slidesByDevice: {
-          ...prev.slidesByDevice,
-          [prev.device]: (prev.slidesByDevice[prev.device] || []).map((s) =>
-            s.id === id ? { ...s, ...patch } : s,
-          ),
-        },
-      }));
+  // ---------- Synchronized Mutations ----------
+
+  const patchSlideWithSync = React.useCallback(
+    (slideId: string, patch: Partial<Slide>) => {
+      setState((prev) => {
+        const currentDev = prev.device;
+
+        if (currentDev === "default") {
+          // 1. Update slide on default device
+          const defaultSlides = (prev.slidesByDevice.default || []).map((slide) => {
+            if (slide.id !== slideId) return slide;
+            return { ...slide, ...patch };
+          });
+
+          // 2. Sync non-overridden fields to all other devices
+          const patchKeys = Object.keys(patch) as (keyof Slide)[];
+          const newSlidesByDevice = { ...prev.slidesByDevice, default: defaultSlides };
+
+          const ALL_OTHER_DEVICES: Device[] = [
+            "iphone",
+            "ipad",
+            "android",
+            "android-7",
+            "android-10",
+            "feature-graphic",
+          ];
+
+          for (const dev of ALL_OTHER_DEVICES) {
+            const devSlides = prev.slidesByDevice[dev];
+            if (!devSlides) continue;
+
+            newSlidesByDevice[dev] = devSlides.map((slide) => {
+              if (slide.id !== slideId) return slide;
+
+              const syncPatch: Partial<Slide> = {};
+              for (const key of patchKeys) {
+                if (!slide.overrides?.[key]) {
+                  (syncPatch as any)[key] = patch[key];
+                }
+              }
+
+              if (Object.keys(syncPatch).length === 0) return slide;
+              return { ...slide, ...syncPatch };
+            });
+          }
+
+          return {
+            ...prev,
+            slidesByDevice: newSlidesByDevice,
+          };
+        } else {
+          // Editing on a specific non-default device
+          const patchKeys = Object.keys(patch);
+          const overridesPatch: Record<string, boolean> = {};
+          for (const k of patchKeys) {
+            if (k !== "id" && k !== "overrides") {
+              overridesPatch[k] = true;
+            }
+          }
+
+          const curSlides = prev.slidesByDevice[currentDev] || [];
+          const nextSlides = curSlides.map((slide) => {
+            if (slide.id !== slideId) return slide;
+            return {
+              ...slide,
+              ...patch,
+              overrides: {
+                ...(slide.overrides || {}),
+                ...overridesPatch,
+              },
+            };
+          });
+
+          return {
+            ...prev,
+            slidesByDevice: {
+              ...prev.slidesByDevice,
+              [currentDev]: nextSlides,
+            },
+          };
+        }
+      });
     },
     [setState],
   );
 
+  const patchSlide = React.useCallback(
+    (id: string, patch: Partial<Slide>) => {
+      patchSlideWithSync(id, patch);
+    },
+    [patchSlideWithSync],
+  );
+
   const reorderSlides = React.useCallback(
     (next: Slide[]) => {
-      setState((prev) => ({
-        ...prev,
-        slidesByDevice: { ...prev.slidesByDevice, [prev.device]: next },
-      }));
+      setState((prev) => {
+        if (prev.device === "default") {
+          const nextIds = next.map((s) => s.id);
+          const newSlidesByDevice = { ...prev.slidesByDevice, default: next };
+          const ALL_OTHER_DEVICES: Device[] = [
+            "iphone",
+            "ipad",
+            "android",
+            "android-7",
+            "android-10",
+            "feature-graphic",
+          ];
+          for (const d of ALL_OTHER_DEVICES) {
+            const cur = prev.slidesByDevice[d] || [];
+            const sorted = [...cur].sort((a, b) => {
+              const indexA = nextIds.indexOf(a.id);
+              const indexB = nextIds.indexOf(b.id);
+              if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+              if (indexA !== -1) return -1;
+              if (indexB !== -1) return 1;
+              return 0;
+            });
+            newSlidesByDevice[d] = sorted;
+          }
+          return { ...prev, slidesByDevice: newSlidesByDevice };
+        } else {
+          return {
+            ...prev,
+            slidesByDevice: { ...prev.slidesByDevice, [prev.device]: next },
+          };
+        }
+      });
     },
     [setState],
   );
@@ -152,11 +258,31 @@ export function ScreenshotEditor() {
       const fallback = slides[idx + 1] || slides[idx - 1] || null;
 
       setState((prev) => {
-        const cur = prev.slidesByDevice[dev] || [];
-        return {
-          ...prev,
-          slidesByDevice: { ...prev.slidesByDevice, [dev]: cur.filter((s) => s.id !== id) },
-        };
+        if (prev.device === "default") {
+          const ALL_DEVICES: Device[] = [
+            "default",
+            "iphone",
+            "ipad",
+            "android",
+            "android-7",
+            "android-10",
+            "feature-graphic",
+          ];
+          const nextSlidesByDevice = { ...prev.slidesByDevice };
+          for (const d of ALL_DEVICES) {
+            nextSlidesByDevice[d] = (nextSlidesByDevice[d] || []).filter((s) => s.id !== id);
+          }
+          return {
+            ...prev,
+            slidesByDevice: nextSlidesByDevice,
+          };
+        } else {
+          const cur = prev.slidesByDevice[dev] || [];
+          return {
+            ...prev,
+            slidesByDevice: { ...prev.slidesByDevice, [dev]: cur.filter((s) => s.id !== id) },
+          };
+        }
       });
       setActiveSlideId((cur) => (cur === id ? fallback?.id || null : cur));
 
@@ -184,13 +310,36 @@ export function ScreenshotEditor() {
 
   const addSlide = React.useCallback(
     (slide: Slide) => {
-      setState((prev) => ({
-        ...prev,
-        slidesByDevice: {
-          ...prev.slidesByDevice,
-          [prev.device]: [...(prev.slidesByDevice[prev.device] || []), slide],
-        },
-      }));
+      setState((prev) => {
+        if (prev.device === "default") {
+          const ALL_DEVICES: Device[] = [
+            "default",
+            "iphone",
+            "ipad",
+            "android",
+            "android-7",
+            "android-10",
+            "feature-graphic",
+          ];
+          const nextSlidesByDevice = { ...prev.slidesByDevice };
+          for (const d of ALL_DEVICES) {
+            const cur = nextSlidesByDevice[d] || [];
+            nextSlidesByDevice[d] = [...cur, { ...slide }];
+          }
+          return {
+            ...prev,
+            slidesByDevice: nextSlidesByDevice,
+          };
+        } else {
+          return {
+            ...prev,
+            slidesByDevice: {
+              ...prev.slidesByDevice,
+              [prev.device]: [...(prev.slidesByDevice[prev.device] || []), slide],
+            },
+          };
+        }
+      });
       setActiveSlideId(slide.id);
     },
     [setState],
@@ -198,83 +347,149 @@ export function ScreenshotEditor() {
 
   const patchLocalized = React.useCallback(
     (slide: Slide, key: "label" | "headline", value: string) => {
-      patchSlide(slide.id, {
+      patchSlideWithSync(slide.id, {
         [key]: writeLocalized(slide[key], state.locale, value),
       } as Partial<Slide>);
     },
-    [patchSlide, state.locale],
+    [patchSlideWithSync, state.locale],
   );
 
   const patchElementTransform = React.useCallback(
     (slideId: string, elementId: ElementId, transform: ElementTransform) => {
-      setState((prev) => ({
-        ...prev,
-        slidesByDevice: {
-          ...prev.slidesByDevice,
-          [prev.device]: (prev.slidesByDevice[prev.device] || []).map((slide) => {
-            if (slide.id !== slideId) return slide;
-            if (isTextElementId(elementId)) {
-              const textId = textElementKey(elementId);
-              return {
-                ...slide,
-                textElements: (slide.textElements || []).map((element) =>
-                  element.id === textId ? { ...element, transform } : element,
-                ),
-              };
-            }
-            if (!isBuiltInElementId(elementId)) return slide;
-            return {
-              ...slide,
-              transforms: {
-                ...(slide.transforms || {}),
-                [elementId]: transform,
-              } as Partial<Record<BuiltInElementId, ElementTransform>>,
-            };
-          }),
-        },
-      }));
+      const activeSlides = state.slidesByDevice[state.device] || [];
+      const targetSlide = activeSlides.find((s) => s.id === slideId);
+      if (!targetSlide) return;
+
+      if (isTextElementId(elementId)) {
+        const textId = textElementKey(elementId);
+        const updatedTextElements = (targetSlide.textElements || []).map((element) =>
+          element.id === textId ? { ...element, transform } : element,
+        );
+        patchSlideWithSync(slideId, { textElements: updatedTextElements });
+      } else if (isBuiltInElementId(elementId)) {
+        const updatedTransforms = {
+          ...(targetSlide.transforms || {}),
+          [elementId]: transform,
+        } as Partial<Record<BuiltInElementId, ElementTransform>>;
+        patchSlideWithSync(slideId, { transforms: updatedTransforms });
+      }
     },
-    [setState],
+    [state.slidesByDevice, state.device, patchSlideWithSync],
   );
 
   const patchTextElementText = React.useCallback(
     (slideId: string, textId: string, value: string) => {
-      setState((prev) => ({
-        ...prev,
-        slidesByDevice: {
-          ...prev.slidesByDevice,
-          [prev.device]: (prev.slidesByDevice[prev.device] || []).map((slide) =>
-            slide.id === slideId
-              ? {
-                ...slide,
-                textElements: (slide.textElements || []).map((element) =>
-                  element.id === textId
-                    ? { ...element, text: writeLocalized(element.text, prev.locale, value) }
-                    : element,
-                ),
-              }
-              : slide,
-          ),
-        },
-      }));
+      const activeSlides = state.slidesByDevice[state.device] || [];
+      const targetSlide = activeSlides.find((s) => s.id === slideId);
+      if (!targetSlide) return;
+
+      const updatedTextElements = (targetSlide.textElements || []).map((element) =>
+        element.id === textId
+          ? { ...element, text: writeLocalized(element.text, state.locale, value) }
+          : element,
+      );
+      patchSlideWithSync(slideId, { textElements: updatedTextElements });
     },
-    [setState],
+    [state.slidesByDevice, state.device, state.locale, patchSlideWithSync],
   );
 
   const applyBackgroundToAll = React.useCallback(
     (bgConfig: SlideBackgroundConfig | undefined, inverted?: boolean) => {
-      setState((prev) => ({
-        ...prev,
-        slidesByDevice: {
-          ...prev.slidesByDevice,
-          [prev.device]: (prev.slidesByDevice[prev.device] || []).map((slide) => ({
+      setState((prev) => {
+        const currentDev = prev.device;
+        if (currentDev === "default") {
+          const defaultSlides = (prev.slidesByDevice.default || []).map((slide) => ({
             ...slide,
             background: bgConfig ? { ...bgConfig } : undefined,
             ...(inverted !== undefined ? { inverted } : {}),
-          })),
-        },
-      }));
+          }));
+
+          const newSlidesByDevice = { ...prev.slidesByDevice, default: defaultSlides };
+          const ALL_OTHER_DEVICES: Device[] = [
+            "iphone",
+            "ipad",
+            "android",
+            "android-7",
+            "android-10",
+            "feature-graphic",
+          ];
+
+          for (const dev of ALL_OTHER_DEVICES) {
+            const devSlides = prev.slidesByDevice[dev];
+            if (!devSlides) continue;
+
+            newSlidesByDevice[dev] = devSlides.map((slide) => {
+              const bgOverridden = slide.overrides?.background;
+              const invOverridden = slide.overrides?.inverted;
+              const nextBackground = !bgOverridden
+                ? (bgConfig ? { ...bgConfig } : undefined)
+                : slide.background;
+              const nextInverted = !invOverridden && inverted !== undefined
+                ? inverted
+                : slide.inverted;
+
+              return {
+                ...slide,
+                background: nextBackground,
+                inverted: nextInverted,
+              };
+            });
+          }
+
+          return { ...prev, slidesByDevice: newSlidesByDevice };
+        } else {
+          const curSlides = prev.slidesByDevice[currentDev] || [];
+          const nextSlides = curSlides.map((slide) => ({
+            ...slide,
+            background: bgConfig ? { ...bgConfig } : undefined,
+            ...(inverted !== undefined ? { inverted } : {}),
+            overrides: {
+              ...(slide.overrides || {}),
+              background: true,
+              ...(inverted !== undefined ? { inverted: true } : {}),
+            },
+          }));
+          return {
+            ...prev,
+            slidesByDevice: {
+              ...prev.slidesByDevice,
+              [currentDev]: nextSlides,
+            },
+          };
+        }
+      });
       toast.success("Background applied to all screens");
+    },
+    [setState],
+  );
+
+  const resetSlideToDefault = React.useCallback(
+    (slideId: string) => {
+      setState((prev) => {
+        const currentDev = prev.device;
+        if (currentDev === "default") return prev;
+
+        const defaultSlide = (prev.slidesByDevice.default || []).find((s) => s.id === slideId);
+        if (!defaultSlide) return prev;
+
+        const curSlides = prev.slidesByDevice[currentDev] || [];
+        const nextSlides = curSlides.map((slide) => {
+          if (slide.id !== slideId) return slide;
+          return {
+            ...defaultSlide,
+            overrides: undefined,
+          };
+        });
+
+        return {
+          ...prev,
+          slidesByDevice: {
+            ...prev.slidesByDevice,
+            [currentDev]: nextSlides,
+          },
+        };
+      });
+      toast.success("Default cihazındaki değerlerle senkronize edildi");
     },
     [setState],
   );
@@ -741,6 +956,7 @@ export function ScreenshotEditor() {
                 )
               }
               onApplyBackgroundToAll={applyBackgroundToAll}
+              onResetToDefault={resetSlideToDefault}
             />
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center text-sm text-muted-foreground">

@@ -93,6 +93,11 @@ export function mergeWithDefaults(parsed: Partial<ProjectState>): ProjectState {
         ]),
       )
     : {};
+  if (!slidesByDevice.default) {
+    const fallbackSource = slidesByDevice.iphone || slidesByDevice.android || DEFAULT_PROJECT.slidesByDevice.default;
+    slidesByDevice.default = fallbackSource.map((s) => ({ ...s }));
+  }
+
   const merged: ProjectState = {
     ...DEFAULT_PROJECT,
     ...parsed,
@@ -133,8 +138,8 @@ async function loadFromFile(): Promise<
   try {
     const resp = await fetch("/api/project", { cache: "no-store" });
     if (!resp.ok) return { ok: false, error: `HTTP ${resp.status}` };
-    const json = (await resp.json()) as { ok: boolean; state: Partial<ProjectState> | null };
-    if (!json.ok) return { ok: false, error: "Project response was not ok" };
+    const json = (await resp.json().catch(() => null)) as { ok: boolean; state: Partial<ProjectState> | null } | null;
+    if (!json || !json.ok) return { ok: false, error: "Project response was not ok" };
     if (!json.state) return { ok: true, state: null };
     return { ok: true, state: mergeWithDefaults(json.state) };
   } catch {
@@ -164,8 +169,8 @@ async function saveToFile(state: ProjectState): Promise<{ ok: true } | { ok: fal
     if (!resp.ok) {
       return { ok: false, error: `HTTP ${resp.status}` };
     }
-    const json = (await resp.json()) as { ok: boolean; error?: string };
-    if (!json.ok) return { ok: false, error: json.error || "Unknown error" };
+    const json = (await resp.json().catch(() => null)) as { ok: boolean; error?: string } | null;
+    if (!json || !json.ok) return { ok: false, error: json?.error || "Unknown error" };
     return { ok: true };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : String(e) };

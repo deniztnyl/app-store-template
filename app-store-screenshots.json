@@ -1,128 +1,79 @@
 {
   "schemaVersion": 2,
-  "appName": "Yiyorum",
+  "appName": "Deneme",
   "themeId": "clean-light",
   "connectedCanvas": true,
   "locales": [
     "en"
   ],
   "locale": "en",
-  "device": "android",
+  "device": "default",
   "orientation": "portrait",
-  "appIcon": "/screenshots/uploaded/ab6cc4be08aae3cc.png",
+  "appIcon": "",
   "slidesByDevice": {
-    "iphone": [
+    "default": [
       {
-        "id": "s_ms003zi5_0",
-        "layout": "hero",
+        "id": "s_ms3mt43o_0",
+        "layout": "device-bottom",
         "label": {
-          "en": "MEET YOUR APP"
+          "en": "Uygulamam"
         },
         "headline": {
-          "en": "Sell one\nidea per slide."
+          "en": "İşte Yeni Denemem"
         },
-        "screenshot": "",
+        "screenshot": "/screenshots/uploaded/9235243d0069591a.png",
         "background": {
-          "type": "theme",
-          "color1": "#3b82f6",
-          "color2": "#9333ea",
-          "angle": 160,
+          "type": "gradient",
+          "color1": "#ff471a",
+          "color2": "#ff9068",
+          "angle": 225,
           "gradientType": "linear",
           "color": "#1e293b",
           "imageUrl": "",
           "imageFit": "cover",
           "overlayOpacity": 0,
-          "hideBlobs": false
+          "hideBlobs": false,
+          "blobColor": "#1f1429",
+          "blobColor2": "#331f5c",
+          "blobScale": 1.45,
+          "blobOpacity": 0.35,
+          "blobBlur": 160
+        },
+        "inverted": false
+      }
+    ],
+    "iphone": [
+      {
+        "id": "s_ms3mt43o_0",
+        "layout": "device-bottom",
+        "label": {
+          "en": "Uygulamam"
+        },
+        "headline": {
+          "en": "İşte Yeni Denemem"
+        },
+        "screenshot": "/screenshots/uploaded/9235243d0069591a.png",
+        "background": {
+          "type": "gradient",
+          "color1": "#ff471a",
+          "color2": "#ff9068",
+          "angle": 225,
+          "gradientType": "linear",
+          "color": "#1e293b",
+          "imageUrl": "",
+          "imageFit": "cover",
+          "overlayOpacity": 0,
+          "hideBlobs": false,
+          "blobColor": "#1f1429",
+          "blobColor2": "#331f5c",
+          "blobScale": 1.45,
+          "blobOpacity": 0.35,
+          "blobBlur": 160
         },
         "inverted": false
       },
       {
-        "id": "s_ms003zi5_1",
-        "layout": "device-bottom",
-        "label": {
-          "en": "FEATURE 01"
-        },
-        "headline": {
-          "en": "Your headline\nlives here."
-        },
-        "screenshot": ""
-      },
-      {
-        "id": "s_ms003zi5_2",
-        "layout": "two-devices",
-        "label": {
-          "en": "FEATURE 02"
-        },
-        "headline": {
-          "en": "Show two\nscreens at once."
-        },
-        "screenshot": "",
-        "screenshotSecondary": ""
-      },
-      {
-        "id": "s_ms003zi5_3",
-        "layout": "device-top",
-        "label": {
-          "en": "FEATURE 03"
-        },
-        "headline": {
-          "en": "Flip the contrast\nfor visual rhythm."
-        },
-        "screenshot": "",
-        "inverted": true,
-        "transforms": {
-          "device": {
-            "x": 153.18224783861672,
-            "y": -286.8,
-            "width": 1013.6355043227666,
-            "height": 2064.96,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        }
-      },
-      {
-        "id": "s_ms003zi5_4",
-        "layout": "no-device",
-        "label": {
-          "en": "MORE"
-        },
-        "headline": {
-          "en": "And so\nmuch more."
-        },
-        "screenshot": ""
-      },
-      {
-        "id": "s_ms006fcb_j",
-        "layout": "hero",
-        "label": {
-          "en": "NEW"
-        },
-        "headline": {
-          "en": "Edit this\nheadline."
-        },
-        "screenshot": "",
-        "transforms": {
-          "caption": {
-            "x": 105.60000000000036,
-            "y": 258.12,
-            "width": 1108.8,
-            "height": 803.0400000000001,
-            "rotation": 0,
-            "zIndex": 4
-          },
-          "device": {
-            "x": 153.1822478386166,
-            "y": 1112.7839999999999,
-            "width": 1013.6355043227666,
-            "height": 2064.96,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        }
-      },
-      {
-        "id": "s_ms009ccn_k",
+        "id": "s_ms3n2lw0_6",
         "layout": "device-bottom",
         "label": {
           "en": "NEW"
@@ -131,1035 +82,141 @@
           "en": "Edit this\nheadline."
         },
         "screenshot": ""
-      },
-      {
-        "id": "s_ms009d06_l",
-        "layout": "device-bottom",
-        "label": {
-          "en": "NEW"
-        },
-        "headline": {
-          "en": "Edit this\nheadline."
-        },
-        "screenshot": ""
-      },
-      {
-        "id": "s_ms009d6f_m",
-        "layout": "device-bottom",
-        "label": {
-          "en": "NEW"
-        },
-        "headline": {
-          "en": "Edit this\nheadline."
-        },
-        "screenshot": ""
-      },
-      {
-        "id": "s_ms009dd3_n",
-        "layout": "device-bottom",
-        "label": {
-          "en": "NEW"
-        },
-        "headline": {
-          "en": "Edit this\nheadline."
-        },
-        "screenshot": ""
-      },
-      {
-        "id": "s_ms009h55_o",
-        "layout": "no-device",
-        "label": {},
-        "headline": {
-          "en": "Edit thisine."
-        },
-        "screenshot": "",
-        "transforms": {
-          "caption": {
-            "x": 132.00000383831778,
-            "y": 1003.5441063915367,
-            "width": 1056,
-            "height": 864,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        }
       }
     ],
     "android": [
       {
-        "id": "s_ms003zi5_5",
+        "id": "s_ms3mt43o_0",
         "layout": "device-bottom",
         "label": {
-          "en": "Recipes"
+          "en": "Uygulamam"
         },
         "headline": {
-          "en": "Rich Recipe Archive"
+          "en": "İşte Yeni Denemem"
         },
-        "screenshot": "/screenshots/uploaded/686111dfcc56becf.png",
+        "screenshot": "/screenshots/uploaded/9235243d0069591a.png",
         "background": {
           "type": "gradient",
-          "color1": "#f09819",
-          "color2": "#FF512f",
-          "angle": 135,
+          "color1": "#ff471a",
+          "color2": "#ff9068",
+          "angle": 225,
           "gradientType": "linear",
           "color": "#1e293b",
           "imageUrl": "",
           "imageFit": "cover",
           "overlayOpacity": 0,
           "hideBlobs": false,
-          "blobColor": "#f6d365",
-          "blobColor2": "#fda085"
-        },
-        "inverted": false,
-        "transforms": {
-          "device": {
-            "x": 200.70778097982713,
-            "y": 411.33371757925113,
-            "width": 678.5844380403457,
-            "height": 1470.266282420749,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "labelStyle": {
-          "fontFamily": "'Outfit', sans-serif",
-          "color": "#4158b4"
-        },
-        "headlineStyle": {
-          "color": "#000000"
-        }
-      },
-      {
-        "id": "s_ms003zi5_6",
-        "layout": "device-bottom",
-        "label": {
-          "en": "FAVORITES"
-        },
-        "headline": {
-          "en": "Save Your\nFavorite Recipes"
-        },
-        "screenshot": "/screenshots/uploaded/e8f15b23ee5c084e.png",
-        "transforms": {
-          "device": {
-            "x": 200.70778097982702,
-            "y": 411.33371757925113,
-            "width": 678.5844380403457,
-            "height": 1470.266282420749,
-            "rotation": 0,
-            "zIndex": 3
-          },
-          "caption": {
-            "x": 86.40000000000009,
-            "y": 153.6,
-            "width": 907.2,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#FFD8C4",
-          "color2": "#FFF0E6",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": false,
-          "blobOpacity": 0.3,
-          "blobBlur": 60
-        }
-      },
-      {
-        "id": "s_ms003zi5_7",
-        "layout": "device-bottom",
-        "label": {
-          "en": "Planner"
-        },
-        "headline": {
-          "en": "Create Weekly\nMeal Plan"
-        },
-        "screenshot": "/screenshots/uploaded/048eabecf33d4649.png",
-        "transforms": {
-          "device": {
-            "x": 200.70778097982657,
-            "y": 411.33371757925113,
-            "width": 678.5844380403457,
-            "height": 1470.266282420749,
-            "rotation": 0,
-            "zIndex": 3
-          },
-          "caption": {
-            "x": 86.40000000000009,
-            "y": 153.6,
-            "width": 907.2,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#FF9966",
-          "color2": "#FF5E62",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
-      },
-      {
-        "id": "s_ms0cv7mt_i",
-        "layout": "device-bottom",
-        "label": {
-          "en": "SHOPPING LIST"
-        },
-        "headline": {
-          "en": "Automatic Smart\nShopping List"
-        },
-        "screenshot": "/screenshots/uploaded/497990a912be5a9a.png",
-        "transforms": {
-          "device": {
-            "x": 200.70778097982748,
-            "y": 413.8207642113755,
-            "width": 678.5844380403457,
-            "height": 1470.266282420749,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#f69b85",
-          "color2": "#fde7e3",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": false,
-          "blobColor": "#F8d65d"
+          "blobColor": "#1f1429",
+          "blobColor2": "#331f5c",
+          "blobScale": 1.45,
+          "blobOpacity": 0.35,
+          "blobBlur": 160
         },
         "inverted": false
-      },
-      {
-        "id": "s_ms0cvt1f_j",
-        "layout": "device-bottom",
-        "label": {
-          "en": "EASY TO USE"
-        },
-        "headline": {
-          "en": "Effortless Experience"
-        },
-        "screenshot": "/screenshots/uploaded/4b4a9cc69dbc5bdd.png",
-        "transforms": {
-          "device": {
-            "x": 200.70778097982748,
-            "y": 411.33371757925113,
-            "width": 678.5844380403457,
-            "height": 1470.266282420749,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#ffe57f",
-          "color2": "#d84315",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
-      },
-      {
-        "id": "s_ms0d1m0l_k",
-        "layout": "device-bottom",
-        "label": {
-          "en": "PREPARATION"
-        },
-        "headline": {
-          "en": "Prepare Recipes\nWith Ease"
-        },
-        "screenshot": "/screenshots/uploaded/7ba9548e7902a398.png",
-        "transforms": {
-          "device": {
-            "x": 200.70778097982748,
-            "y": 411.33371757925113,
-            "width": 678.5844380403457,
-            "height": 1470.266282420749,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#f09819",
-          "color2": "#FF512f",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": false,
-          "blobColor": "#f6d365"
-        }
-      },
-      {
-        "id": "s_ms0d1mer_l",
-        "layout": "device-bottom",
-        "label": {
-          "en": "INGREDIENTS"
-        },
-        "headline": {
-          "en": "View All\nRequired Ingredients"
-        },
-        "screenshot": "/screenshots/uploaded/bfd0ddb907aad851.png",
-        "transforms": {
-          "device": {
-            "x": 200.70778097982748,
-            "y": 411.33371757925113,
-            "width": 678.5844380403457,
-            "height": 1470.266282420749,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#f69b85",
-          "color2": "#fde7e3",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
-      },
-      {
-        "id": "s_ms0d1mro_m",
-        "layout": "device-bottom",
-        "label": {
-          "en": "PLANNING"
-        },
-        "headline": {
-          "en": "Add to Plan\nInstantly"
-        },
-        "screenshot": "/screenshots/uploaded/88052ad356ed8695.png",
-        "transforms": {
-          "device": {
-            "x": 200.70778097982748,
-            "y": 411.33371757925113,
-            "width": 678.5844380403457,
-            "height": 1470.266282420749,
-            "rotation": 0,
-            "zIndex": 3
-          },
-          "caption": {
-            "x": 86.39999999999964,
-            "y": 153.6,
-            "width": 907.2,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#FF9966",
-          "color2": "#FF5E62",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
       }
     ],
     "ipad": [
       {
-        "id": "s_ms003zi5_a",
-        "layout": "hero",
-        "label": {
-          "en": "MEET YOUR APP"
-        },
-        "headline": {
-          "en": "Made for\nthe big screen."
-        },
-        "screenshot": ""
-      },
-      {
-        "id": "s_ms003zi5_b",
+        "id": "s_ms3mt43o_0",
         "layout": "device-bottom",
         "label": {
-          "en": "FEATURE 01"
+          "en": "Uygulamam"
         },
         "headline": {
-          "en": "Built for\nfocus."
+          "en": "İşte Yeni Denemem"
         },
-        "screenshot": ""
-      },
-      {
-        "id": "s_ms003zi5_c",
-        "layout": "device-top",
-        "label": {
-          "en": "FEATURE 02"
+        "screenshot": "/screenshots/uploaded/9235243d0069591a.png",
+        "background": {
+          "type": "gradient",
+          "color1": "#ff471a",
+          "color2": "#ff9068",
+          "angle": 225,
+          "gradientType": "linear",
+          "color": "#1e293b",
+          "imageUrl": "",
+          "imageFit": "cover",
+          "overlayOpacity": 0,
+          "hideBlobs": false,
+          "blobColor": "#1f1429",
+          "blobColor2": "#331f5c",
+          "blobScale": 1.45,
+          "blobOpacity": 0.35,
+          "blobBlur": 160
         },
-        "headline": {
-          "en": "Always within reach."
-        },
-        "screenshot": "",
-        "inverted": true
+        "inverted": false
       }
     ],
     "android-7": [
       {
-        "id": "s_ms0eckzt_n",
+        "id": "s_ms3mt43o_0",
         "layout": "device-bottom",
         "label": {
-          "en": "Recipes"
+          "en": "Uygulamam"
         },
         "headline": {
-          "en": "Rich Recipe Archive"
+          "en": "İşte Yeni Denemem"
         },
-        "screenshot": "/screenshots/uploaded/af4f5e2c7a2f0ab3.png",
-        "transforms": {
-          "caption": {
-            "x": 98.4870466321222,
-            "y": 91.42383419689119,
-            "width": 1008,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
-        "labelStyle": {
-          "color": "#4158b4"
-        },
+        "screenshot": "/screenshots/uploaded/9235243d0069591a.png",
         "background": {
           "type": "gradient",
-          "color1": "#f09819",
-          "color2": "#FF512f",
-          "angle": 160,
+          "color1": "#ff471a",
+          "color2": "#ff9068",
+          "angle": 225,
           "gradientType": "linear",
           "color": "#1e293b",
           "imageUrl": "",
           "imageFit": "cover",
           "overlayOpacity": 0,
           "hideBlobs": false,
-          "blobColor": "#f6d365",
-          "blobColor2": "#fda085"
-        }
-      },
-      {
-        "id": "s_ms0eelek_t",
-        "layout": "device-bottom",
-        "label": {
-          "en": "FAVORITES"
+          "blobColor": "#1f1429",
+          "blobColor2": "#331f5c",
+          "blobScale": 1.45,
+          "blobOpacity": 0.35,
+          "blobBlur": 160
         },
-        "headline": {
-          "en": "Save Your\nFavorite Recipes"
-        },
-        "screenshot": "/screenshots/uploaded/c490eb7a450dddea.png",
-        "transforms": {
-          "caption": {
-            "x": 98.4870466321222,
-            "y": 91.42383419689119,
-            "width": 1008,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          },
-          "device": {
-            "x": 138.9695999999999,
-            "y": 406.30272,
-            "width": 922.0608,
-            "height": 1475.29728,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#FFD8C4",
-          "color2": "#FFF0E6",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": false,
-          "blobOpacity": 0.25
-        }
-      },
-      {
-        "id": "s_ms0eel1v_s",
-        "layout": "device-bottom",
-        "label": {
-          "en": "Planner"
-        },
-        "headline": {
-          "en": "Create Weekly\nMeal Plan"
-        },
-        "screenshot": "/screenshots/uploaded/70e7a6a238992f4a.png",
-        "transforms": {
-          "caption": {
-            "x": 98.4870466321222,
-            "y": 91.42383419689119,
-            "width": 1008,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#FF9966",
-          "color2": "#FF5E62",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
-      },
-      {
-        "id": "s_ms0eekpk_r",
-        "layout": "device-bottom",
-        "label": {
-          "en": "SHOPPING LIST"
-        },
-        "headline": {
-          "en": "Automatic Smart\nShopping List"
-        },
-        "screenshot": "/screenshots/uploaded/135e88340a02c4f0.png",
-        "transforms": {
-          "caption": {
-            "x": 98.4870466321222,
-            "y": 91.42383419689119,
-            "width": 1008,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#f69b85",
-          "color2": "#fde7e3",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": false,
-          "blobColor": "#F8d65d"
-        }
-      },
-      {
-        "id": "s_ms0eeke3_q",
-        "layout": "device-bottom",
-        "label": {
-          "en": "EASY TO USE"
-        },
-        "headline": {
-          "en": "Effortless Experience"
-        },
-        "screenshot": "/screenshots/uploaded/65c2558700eb23af.png",
-        "transforms": {
-          "caption": {
-            "x": 98.4870466321222,
-            "y": 91.42383419689119,
-            "width": 1008,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#ffe57f",
-          "color2": "#d84315",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
-      },
-      {
-        "id": "s_ms0eej1y_p",
-        "layout": "device-bottom",
-        "label": {
-          "en": "PREPARATION"
-        },
-        "headline": {
-          "en": "Prepare Recipes\nWith Ease"
-        },
-        "screenshot": "/screenshots/uploaded/e77fc2d33d312482.png",
-        "transforms": {
-          "caption": {
-            "x": 98.4870466321222,
-            "y": 91.42383419689119,
-            "width": 1008,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#f09819",
-          "color2": "#FF512f",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": false,
-          "blobColor": "#f6d365"
-        }
-      },
-      {
-        "id": "s_ms0gapnk_i",
-        "layout": "device-bottom",
-        "label": {
-          "en": "INGREDIENTS"
-        },
-        "headline": {
-          "en": "View All\nRequired Ingredients"
-        },
-        "screenshot": "/screenshots/uploaded/346f282d22400669.png",
-        "transforms": {
-          "caption": {
-            "x": 98.4870466321222,
-            "y": 91.42383419689119,
-            "width": 1008,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          },
-          "device": {
-            "x": 138.96960000000036,
-            "y": 406.30272,
-            "width": 922.0608,
-            "height": 1475.29728,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#f69b85",
-          "color2": "#fde7e3",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
-      },
-      {
-        "id": "s_ms0gbc18_j",
-        "layout": "device-bottom",
-        "label": {
-          "en": "PLANNING"
-        },
-        "headline": {
-          "en": "Add to Plan\nInstantly"
-        },
-        "screenshot": "/screenshots/uploaded/3d5a3f3204acbcf4.png",
-        "transforms": {
-          "caption": {
-            "x": 98.4870466321222,
-            "y": 91.42383419689119,
-            "width": 1008,
-            "height": 537.6,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#FF9966",
-          "color2": "#FF5E62",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
+        "inverted": false
       }
     ],
     "android-10": [
       {
-        "id": "s_ms0ed001_o",
+        "id": "s_ms3mt43o_0",
         "layout": "device-bottom",
         "label": {
-          "en": "RECIPES"
+          "en": "Uygulamam"
         },
         "headline": {
-          "en": "Rich Recipe Archive"
+          "en": "İşte Yeni Denemem"
         },
-        "screenshot": "/screenshots/uploaded/d50bade97b37e0cb.png",
-        "transforms": {
-          "caption": {
-            "x": 144.5803035184631,
-            "y": 75.47357347300141,
-            "width": 1344,
-            "height": 717,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
+        "screenshot": "/screenshots/uploaded/9235243d0069591a.png",
         "background": {
           "type": "gradient",
-          "color1": "#f09819",
-          "color2": "#FF512f",
-          "angle": 160,
+          "color1": "#ff471a",
+          "color2": "#ff9068",
+          "angle": 225,
           "gradientType": "linear",
           "color": "#1e293b",
           "imageUrl": "",
           "imageFit": "cover",
           "overlayOpacity": 0,
           "hideBlobs": false,
-          "blobColor": "#f6d365",
-          "blobColor2": "#fda085"
+          "blobColor": "#1f1429",
+          "blobColor2": "#331f5c",
+          "blobScale": 1.45,
+          "blobOpacity": 0.35,
+          "blobBlur": 160
         },
-        "labelStyle": {
-          "color": "#4158b4"
-        }
-      },
-      {
-        "id": "s_ms0ejmze_p",
-        "layout": "device-bottom",
-        "label": {
-          "en": "FAVORITES"
-        },
-        "headline": {
-          "en": "Save Your\nFavorite Recipes"
-        },
-        "screenshot": "/screenshots/uploaded/acae5b1010f80f69.png",
-        "transforms": {
-          "caption": {
-            "x": 144.5803035184631,
-            "y": 75.47357347300141,
-            "width": 1344,
-            "height": 717,
-            "rotation": 0,
-            "zIndex": 4
-          },
-          "device": {
-            "x": 185.29280000000017,
-            "y": 541.7369600000002,
-            "width": 1229.4144,
-            "height": 1967.0630399999998,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#FFD8C4",
-          "color2": "#FFF0E6",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": false,
-          "blobOpacity": 0.25
-        }
-      },
-      {
-        "id": "s_ms0ejld2_o",
-        "layout": "device-bottom",
-        "label": {
-          "en": "Planner"
-        },
-        "headline": {
-          "en": "Create Weekly\nMeal Plan"
-        },
-        "screenshot": "/screenshots/uploaded/751753d96d9d38fb.png",
-        "transforms": {
-          "caption": {
-            "x": 144.5803035184631,
-            "y": 75.47357347300141,
-            "width": 1344,
-            "height": 717,
-            "rotation": 0,
-            "zIndex": 4
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#FF9966",
-          "color2": "#FF5E62",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
-      },
-      {
-        "id": "s_ms0ejl17_n",
-        "layout": "device-bottom",
-        "label": {
-          "en": "SHOPPING LIST"
-        },
-        "headline": {
-          "en": "Automatic Smart\nShopping List"
-        },
-        "screenshot": "/screenshots/uploaded/49e5f9c4d29b4d69.png",
-        "transforms": {
-          "caption": {
-            "x": 144.5803035184631,
-            "y": 75.47357347300141,
-            "width": 1344,
-            "height": 717,
-            "rotation": 0,
-            "zIndex": 4
-          },
-          "device": {
-            "x": 185.29280000000017,
-            "y": 541.7369600000002,
-            "width": 1229.4144,
-            "height": 1967.0630399999998,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#f69b85",
-          "color2": "#fde7e3",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": false,
-          "blobColor": "#F8d65d"
-        }
-      },
-      {
-        "id": "s_ms0ejkn8_m",
-        "layout": "device-bottom",
-        "label": {
-          "en": "EASY TO USE"
-        },
-        "headline": {
-          "en": "Effortless Experience"
-        },
-        "screenshot": "/screenshots/uploaded/b587853b3175c286.png",
-        "transforms": {
-          "caption": {
-            "x": 144.58030351846355,
-            "y": 75.47357347300141,
-            "width": 1344,
-            "height": 717,
-            "rotation": 0,
-            "zIndex": 4
-          },
-          "device": {
-            "x": 181.9767378238348,
-            "y": 545.053022176166,
-            "width": 1229.4144,
-            "height": 1967.0630399999998,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#ffe57f",
-          "color2": "#d84315",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
-      },
-      {
-        "id": "s_ms0ejk8n_l",
-        "layout": "device-bottom",
-        "label": {
-          "en": "PREPARATION"
-        },
-        "headline": {
-          "en": "Prepare Recipes\nWith Ease"
-        },
-        "screenshot": "/screenshots/uploaded/ce7f61d809c016d3.png",
-        "transforms": {
-          "caption": {
-            "x": 144.5803035184631,
-            "y": 75.47357347300141,
-            "width": 1344,
-            "height": 717,
-            "rotation": 0,
-            "zIndex": 4
-          },
-          "device": {
-            "x": 185.29280000000017,
-            "y": 541.7369600000002,
-            "width": 1229.4144,
-            "height": 1967.0630399999998,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#f09819",
-          "color2": "#FF512f",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": false,
-          "blobColor": "#f6d365"
-        }
-      },
-      {
-        "id": "s_ms0ejju2_k",
-        "layout": "device-bottom",
-        "label": {
-          "en": "INGREDIENTS"
-        },
-        "headline": {
-          "en": "View All\nRequired Ingredients"
-        },
-        "screenshot": "/screenshots/uploaded/ee2ff1556dfe9e26.png",
-        "transforms": {
-          "caption": {
-            "x": 144.5803035184631,
-            "y": 75.47357347300141,
-            "width": 1344,
-            "height": 717,
-            "rotation": 0,
-            "zIndex": 4
-          },
-          "device": {
-            "x": 185.29279999999926,
-            "y": 541.7369600000002,
-            "width": 1229.4144,
-            "height": 1967.0630399999998,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#f69b85",
-          "color2": "#fde7e3",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
-      },
-      {
-        "id": "s_ms0ejj5h_j",
-        "layout": "device-bottom",
-        "label": {
-          "en": "PLANNING"
-        },
-        "headline": {
-          "en": "Add to Plan\nInstantly"
-        },
-        "screenshot": "/screenshots/uploaded/d2deadfc60d94f8e.png",
-        "transforms": {
-          "caption": {
-            "x": 144.5803035184631,
-            "y": 75.47357347300141,
-            "width": 1344,
-            "height": 717,
-            "rotation": 0,
-            "zIndex": 4
-          },
-          "device": {
-            "x": 185.29279999999926,
-            "y": 541.7369600000002,
-            "width": 1229.4144,
-            "height": 1967.0630399999998,
-            "rotation": 0,
-            "zIndex": 3
-          }
-        },
-        "background": {
-          "type": "gradient",
-          "color1": "#FF9966",
-          "color2": "#FF5E62",
-          "angle": 160,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        }
+        "inverted": false
       }
     ],
     "feature-graphic": [
       {
-        "id": "s_ms003zi5_h",
+        "id": "s_ms3mt43o_5",
         "layout": "feature-graphic",
         "label": {},
         "headline": {
-          "en": "Pick Recipes, Plan Your Week\nAutomatic Shopping List Generated!"
+          "en": "Your tagline goes here."
         },
-        "screenshot": "",
-        "background": {
-          "type": "gradient",
-          "color1": "#ff4b1f",
-          "color2": "#ff9068",
-          "angle": 135,
-          "gradientType": "linear",
-          "color": "#1e293b",
-          "imageUrl": "",
-          "imageFit": "cover",
-          "overlayOpacity": 0,
-          "hideBlobs": true
-        },
-        "inverted": true
+        "screenshot": ""
       }
     ]
   }

@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { AlertTriangle, Check, Cloud, Download, FolderOpen, Save, UnfoldHorizontal, RotateCcw } from "lucide-react";
+import { AlertTriangle, Check, Cloud, Download, FolderOpen, Save, UnfoldHorizontal, RotateCcw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -56,16 +56,20 @@ export function Toolbar(props: Props) {
 
   // Track last device per platform so iOS/Android tabs preserve user's choice.
   const lastByPlatform = React.useRef<{ ios: Device; android: Device }>({
-    ios: platform === "ios" ? props.device : "iphone",
-    android: platform === "android" ? props.device : "android",
+    ios: platform === "ios" && props.device !== "default" ? props.device : "iphone",
+    android: platform === "android" && props.device !== "default" ? props.device : "android",
   });
   React.useEffect(() => {
-    lastByPlatform.current[platform] = props.device;
+    if (props.device !== "default") {
+      lastByPlatform.current[platform] = props.device;
+    }
   }, [platform, props.device]);
 
   const showLocale = props.locales.length > 1;
 
   const deviceLabel = DEVICE_LABEL[props.device];
+
+  const currentTab = props.device === "default" ? "default" : platform;
 
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 border-b bg-card/40 px-4 py-2">
@@ -102,14 +106,22 @@ export function Toolbar(props: Props) {
       <span aria-hidden className="mx-1 h-5 w-px bg-border" />
 
       <Tabs
-        value={platform}
-        onValueChange={(p) => {
+        value={currentTab}
+        onValueChange={(val) => {
           if (props.busy) return;
-          const next = p === "ios" ? lastByPlatform.current.ios : lastByPlatform.current.android;
-          props.setDevice(next);
+          if (val === "default") {
+            props.setDevice("default");
+          } else {
+            const next = val === "ios" ? lastByPlatform.current.ios : lastByPlatform.current.android;
+            props.setDevice(next);
+          }
         }}
       >
         <TabsList className="h-8 p-0.5">
+          <TabsTrigger value="default" className="h-7 gap-1 px-2.5 text-xs font-semibold" disabled={props.busy}>
+            <Sparkles className="h-3 w-3 text-amber-500" />
+            Default
+          </TabsTrigger>
           <TabsTrigger value="ios" className="h-7 px-3 text-xs" disabled={props.busy}>
             iOS
           </TabsTrigger>
@@ -124,23 +136,27 @@ export function Toolbar(props: Props) {
         onValueChange={(v) => props.setDevice(v as Device)}
         disabled={props.busy}
       >
-        <SelectTrigger className="h-8 w-44 text-xs">
+        <SelectTrigger className="h-8 w-48 text-xs font-medium">
           <SelectValue placeholder="Device">{deviceLabel}</SelectValue>
         </SelectTrigger>
         <SelectContent>
-          {platform === "ios" ? (
+          <SelectItem value="default" className="font-semibold text-amber-600 dark:text-amber-400">
+            {DEVICE_LABEL.default}
+          </SelectItem>
+          {platform === "ios" || props.device === "default" ? (
             <>
               <SelectItem value="iphone">{DEVICE_LABEL.iphone}</SelectItem>
               <SelectItem value="ipad">{DEVICE_LABEL.ipad}</SelectItem>
             </>
-          ) : (
+          ) : null}
+          {platform === "android" || props.device === "default" ? (
             <>
               <SelectItem value="android">{DEVICE_LABEL.android}</SelectItem>
               <SelectItem value="android-7">{DEVICE_LABEL["android-7"]}</SelectItem>
               <SelectItem value="android-10">{DEVICE_LABEL["android-10"]}</SelectItem>
               <SelectItem value="feature-graphic">{DEVICE_LABEL["feature-graphic"]}</SelectItem>
             </>
-          )}
+          ) : null}
         </SelectContent>
       </Select>
 

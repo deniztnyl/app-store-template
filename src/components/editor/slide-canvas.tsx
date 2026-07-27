@@ -53,6 +53,7 @@ export function getCanvas(device: Device, orientation: Orientation) {
 // Aspect ratio (w/h) of each device frame — must match device-frames.tsx
 function getFrameAspect(device: Device, orientation: Orientation) {
   switch (device) {
+    case "default":
     case "iphone":      return MK_RATIO;
     case "android":     return 9 / 19.5;
     case "ipad":        return IPAD_RATIO;
@@ -68,6 +69,7 @@ export function getFrameForDevice(device: Device, orientation: Orientation): {
   smallWidthFn: (cW: number, cH: number) => number;
 } {
   switch (device) {
+    case "default":
     case "iphone":
       return { Comp: Phone, widthFn: phoneW, smallWidthFn: phoneWSmall };
     case "ipad":

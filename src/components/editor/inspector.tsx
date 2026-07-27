@@ -10,6 +10,7 @@ import {
   ChevronUp,
   Plus,
   RotateCw,
+  Sparkles,
   Trash2,
   Type,
 } from "lucide-react";
@@ -58,6 +59,7 @@ type Props = {
   onChange: (patch: Partial<Slide>) => void;
   onSelectElement: (id: ElementId | null) => void;
   onApplyBackgroundToAll?: (bgConfig: SlideBackgroundConfig | undefined, inverted?: boolean) => void;
+  onResetToDefault?: (slideId: string) => void;
   appIcon?: string;
   onAppIconChange?: (icon: string) => void;
 };
@@ -77,6 +79,7 @@ export function Inspector({
   onChange,
   onSelectElement,
   onApplyBackgroundToAll,
+  onResetToDefault,
   appIcon,
   onAppIconChange,
 }: Props) {
@@ -106,9 +109,11 @@ export function Inspector({
     }
   }, [device, onChange, slide.layout]);
 
+  const hasOverrides = slide.overrides && Object.keys(slide.overrides).length > 0;
+
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b p-3">
+      <div className="border-b p-3 space-y-1.5">
         <div className="flex items-baseline justify-between gap-2">
           <h2 className="text-sm font-semibold">Screen settings</h2>
           <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
@@ -116,6 +121,30 @@ export function Inspector({
           </span>
         </div>
         <p className="text-xs text-muted-foreground">{LAYOUT_HINT[layoutValue]}</p>
+
+        {device === "default" ? (
+          <div className="mt-2 flex items-center gap-1.5 rounded-md bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-700 dark:text-amber-400">
+            <Sparkles className="h-3 w-3 shrink-0" />
+            <span>Default mod: Değişiklikler tüm cihazlara senkronize edilir.</span>
+          </div>
+        ) : (
+          <div className="mt-2 flex items-center justify-between gap-2 rounded-md bg-muted/60 px-2.5 py-1 text-[11px]">
+            <span className="text-muted-foreground">
+              {hasOverrides ? "Cihaza özgü özelleştirme var" : "Default ile senkronize"}
+            </span>
+            {hasOverrides && onResetToDefault && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-5 px-1.5 text-[10px] font-medium text-primary hover:bg-background"
+                onClick={() => onResetToDefault(slide.id)}
+                title="Cihaza özgü değişiklikleri kaldır ve Default cihazındaki değerlerle senkronize et"
+              >
+                Default'a Sıfırla
+              </Button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto p-3">

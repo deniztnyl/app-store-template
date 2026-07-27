@@ -2,6 +2,7 @@ import type { Device, Orientation, SlideLayout, Theme, ThemeId } from "./types";
 
 // ---------- Canvas dimensions (design at largest required resolution) ----------
 export const CANVAS: Record<Device, { w: number; h: number; wL?: number; hL?: number }> = {
+  default:       { w: 1320, h: 2868 },
   iphone:        { w: 1320, h: 2868 },
   ipad:          { w: 2064, h: 2752 },
   android:       { w: 1080, h: 1920 },
@@ -14,6 +15,7 @@ export const CANVAS: Record<Device, { w: number; h: number; wL?: number; hL?: nu
 export type ExportSize = { label: string; w: number; h: number };
 
 export const EXPORT_SIZES: Record<Device, ExportSize[]> = {
+  default:       [{ label: 'Default',        w: 1320, h: 2868 }],
   iphone: [
     { label: '6.9"', w: 1320, h: 2868 },
     { label: '6.5"', w: 1284, h: 2778 },
@@ -148,6 +150,7 @@ export const STORAGE_KEY = "app-store-screenshots:project:v1";
 export const PROJECT_SCHEMA_VERSION = 2;
 
 export const DEVICE_LABEL: Record<Device, string> = {
+  default: "Default (Senkronize)",
   iphone: "iPhone",
   ipad: "iPad",
   android: "Android Phone",

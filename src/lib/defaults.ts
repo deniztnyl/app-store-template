@@ -107,6 +107,8 @@ function fgStarter(): Slide[] {
   ];
 }
 
+const starterSlides = makeStarterSlides();
+
 export const DEFAULT_PROJECT: ProjectState = {
   schemaVersion: PROJECT_SCHEMA_VERSION,
   appName: "My App",
@@ -114,15 +116,16 @@ export const DEFAULT_PROJECT: ProjectState = {
   connectedCanvas: true,
   locales: [DEFAULT_LOCALE],
   locale: DEFAULT_LOCALE,
-  device: "iphone",
+  device: "default",
   orientation: "portrait",
   appIcon: "",
   slidesByDevice: {
-    iphone: makeStarterSlides(),
-    android: makeStarterSlides(),
-    ipad: ipadStarter(),
-    "android-7": tabletStarter("7"),
-    "android-10": tabletStarter("10"),
+    default: starterSlides,
+    iphone: starterSlides.map((s) => ({ ...s })),
+    android: starterSlides.map((s) => ({ ...s })),
+    ipad: starterSlides.slice(0, 3).map((s) => ({ ...s })),
+    "android-7": starterSlides.slice(0, 2).map((s) => ({ ...s })),
+    "android-10": starterSlides.slice(0, 2).map((s) => ({ ...s })),
     "feature-graphic": fgStarter(),
   },
 };
@@ -138,5 +141,5 @@ export function newSlide(layout: Slide["layout"] = "device-bottom"): Slide {
 }
 
 export function detectPlatform(device: Device): "ios" | "android" {
-  return device === "iphone" || device === "ipad" ? "ios" : "android";
+  return device === "iphone" || device === "ipad" || device === "default" ? "ios" : "android";
 }
